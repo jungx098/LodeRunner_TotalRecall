@@ -46,7 +46,29 @@ function mainMenuIconClass( _screenX1, _screenY1, _scale, _mainMenuBitmap)
 		enabled = 0;
 		stage.enableMouseOver(0);
 	}
-	
+
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _mainMenuBitmap.getBounds().width * _scale;
+		bitmapY = _mainMenuBitmap.getBounds().height * _scale;
+		mainMainCanvas.width  = bitmapX+border*2;
+		mainMainCanvas.height = bitmapY+border*2;
+
+		var left = (_screenX1 - mainMainCanvas.width - screenBorder),
+		    top  = bitmapY/2|0;
+
+		mainMainCanvas.style.left = left + "px";
+		mainMainCanvas.style.top  = top  + "px";
+
+		menuBG.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		_mainMenuBitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
+	}
+
 	function enableMouseHandler()
 	{
 		mouseOverHandler = menuIcon.on("mouseover", mouseOver);
@@ -196,7 +218,30 @@ function selectIconClass( _screenX1, _screenY1, _scale, _bitmap)
 		enabled = 0;
 		stage.enableMouseOver(0);
 	}
-	
+
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _bitmap.getBounds().width * _scale;
+		bitmapY = _bitmap.getBounds().height * _scale;
+		selectCanvas.width  = bitmapX+border*2;
+		selectCanvas.height = bitmapY+border*2;
+
+		var left = (_screenX1 - selectCanvas.width - screenBorder),
+		    top  = (selectCanvas.height + bitmapY)|0;
+
+		selectCanvas.style.left = left + "px";
+		selectCanvas.style.top =  top + "px";
+
+		selectBG.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		//change bitmap size
+		_bitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
+	}
+
 	function enableMouseHandler()
 	{
 		mouseOverHandler = selectIcon.on("mouseover", mouseOver);
@@ -531,6 +576,29 @@ function soundIconClass( _screenX1, _screenY1, _scale, _soundOnBitmap, _soundOff
 		stage.enableMouseOver(0);
 	}
 
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _soundOnBitmap.getBounds().width * _scale;
+		bitmapY = _soundOnBitmap.getBounds().height * _scale;
+		canvas.width  = bitmapX+border*2;
+		canvas.height = bitmapY+border*2;
+
+		var left = (_screenX1 - canvas.width - screenBorder),
+			top  = (_screenY1 - bitmapY*8.6)|0;
+
+		canvas.style.left = left + "px";
+		canvas.style.top =  top + "px";
+
+		bgObj.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		//change bitmap size
+		_soundOnBitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
+	}
+
 	function enableMouseHandler()
 	{
 		mouseOverHandler = iconObj.on("mouseover", mouseOver);
@@ -677,6 +745,28 @@ function repeatActionIconClass( _screenX1, _screenY1, _scale, _repeatActionOnBit
 		stage.enableMouseOver(0);
 	}
 
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _repeatActionOnBitmap.getBounds().width * _scale;
+		bitmapY = _repeatActionOnBitmap.getBounds().height * _scale;
+		canvas.width  = bitmapX + border*2;
+		canvas.height = bitmapY + border*2;
+
+		var left = (_screenX1 - canvas.width - screenBorder),
+		    top  = (_screenY1 - bitmapY*6.4)|0;
+
+		canvas.style.left = left + "px";
+		canvas.style.top  = top + "px";
+
+		bgObj.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		_repeatActionOnBitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
+	}
+
 	function enableMouseHandler()
 	{
 		mouseOverHandler = iconObj.on("mouseover", mouseOver);
@@ -813,6 +903,29 @@ function infoIconClass( _screenX1, _screenY1, _scale, _bitmap)
 		stage.update();
 		enabled = 0;
 		stage.enableMouseOver(0);
+	}
+
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _bitmap.getBounds().width * _scale;
+		bitmapY = _bitmap.getBounds().height * _scale;
+		canvas.width  = bitmapX + border*2;
+		canvas.height = bitmapY + border*2;
+
+		var left = (_screenX1 - canvas.width - screenBorder),
+		    top  = (_screenY1 - bitmapY*4.8);
+
+		canvas.style.left = left + "px";
+		canvas.style.top  = top + "px";
+
+		bgObj.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		//change bitmap size
+		_bitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
 	}
 
 	function enableMouseHandler()
@@ -965,6 +1078,29 @@ function helpIconClass( _screenX1, _screenY1, _scale, _bitmap)
 		stage.update();
 		enabled = 0;
 		stage.enableMouseOver(0);
+	}
+
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _bitmap.getBounds().width * _scale;
+		bitmapY = _bitmap.getBounds().height * _scale;
+		canvas.width  = bitmapX+border*2;
+		canvas.height = bitmapY+border*2;
+
+		var left = (_screenX1 - canvas.width - screenBorder),
+		    top  = (_screenY1 - bitmapY*3.2);
+
+		canvas.style.left = left + "px";
+		canvas.style.top =  top + "px";
+
+		bgObj.graphics.beginFill(mouseOverBGColor)
+			      .drawRect(0, 0, bitmapX+border*2, bitmapY+border*2).endFill();
+
+		//change bitmap size
+		_bitmap.setTransform(border, border, _scale, _scale);
+
+		stage.update();
 	}
 
 	function enableMouseHandler()
@@ -1123,6 +1259,31 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 		stage.enableMouseOver(0);
 	}
 	
+
+	this.resize = function (_screenX1, _screenY1, _scale)
+	{
+		border = 4 * _scale;
+		bitmapX = _themeBitmapApple2.getBounds().width * _scale;
+		bitmapY = _themeBitmapApple2.getBounds().height * _scale;
+		themeCanvas.width  = bitmapX+border*2;
+		themeCanvas.height = bitmapY+border*2;
+
+		var left = (_screenX1 - themeCanvas.width - screenBorder);
+		var top  = (_screenY1 - bitmapY*1.5);
+
+		themeCanvas.style.left = left + "px";
+		themeCanvas.style.top =  top + "px";
+
+		themeBG.graphics.beginFill(outColor)
+			      .drawRect(0, 0, bitmapX + border*2, bitmapY + border*2).endFill();
+
+		//change bitmap size
+		_themeBitmapApple2.setTransform(border, border, _scale, _scale);
+		_themeBitmapC64.setTransform(border, border, _scale, _scale);
+
+		stage.update();
+	}
+
 	function enableMouseHandler()
 	{
 		mouseOverHandler = themeIcon.on("mouseover", mouseOver);
@@ -1250,13 +1411,19 @@ function changeThemeScreen()
 	
 	//Change runner theme
 	runner.sprite.spriteSheet = runnerData;
-	
+
+	// Resize runner
+	runner.sprite.setTransform(runner.pos.x * tileWScale, runner.pos.y * tileHScale, tileScale, tileScale);
+
 	//change guard theme
 	for(var i = 0; i < guardCount; i++) {
 		if(redhatMode && guard[i].hasGold > 0)
 			guard[i].sprite.spriteSheet = redhatData;
 		else
 			guard[i].sprite.spriteSheet = guardData;
+
+		// Resize guard
+		guard[i].sprite.setTransform(guard[i].pos.x * tileWScale, guard[i].pos.y * tileHScale, tileScale, tileScale);
 	}
 	
 	//change holeObj theme
