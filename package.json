@@ -1,0 +1,31 @@
+{
+    "name": "LodeRunner",
+    "version": "0.9.0",
+    "description": "Lode Runner",
+    "main": "main.js",
+    "scripts": {
+        "start": "electron .",
+        "pack": "electron-builder --win --dir",
+        "dist": "electron-builder --publish never",
+        "distwin": "electron-builder --win --publish never"
+    },
+    "build": {
+        "mac": {
+            "icon": "./image/icon.512.png"
+        },
+        "win": {
+            "target": "portable",
+            "icon": "./image/icon.256.png"
+        }
+    },
+    "repository": "https://github.com/jungx098/LodeRunner_TotalRecall",
+    "keywords": [
+        "LodeRunner",
+        "Lode Runner"
+    ],
+    "author": "jungx098",
+    "devDependencies": {
+        "electron": "^7.1.1",
+        "electron-builder": "^21.2.0"
+    }
+}
