@@ -22,6 +22,48 @@ function error(funName, string)
 function getScreenSize() 
 {
 	var x, y;
+
+	// Electron: when restoring native fullscreen, the first layout can run before
+	// innerWidth/innerHeight catch up (macOS), so canvas centering uses a width that is
+	// too small — purple gutters (body background) on the side and wrong tileScale.
+	// Prefer display bounds when we know we started fullscreen or when outer* already
+	// fills the display but inner* is still the old window size.
+	var startFullscreen = false;
+	try {
+		startFullscreen = process.argv.indexOf('--lode-runner-start-fullscreen') >= 0;
+	} catch (e) {}
+	if (!startFullscreen) {
+		try {
+			startFullscreen = new URLSearchParams(window.location.search).get('sf') === '1';
+		} catch (e) {}
+	}
+
+	if (typeof process !== 'undefined' && process.versions && process.versions.electron) {
+		try {
+			var screenMod = require('electron').screen;
+			var px = window.screenX + (window.outerWidth || 0) / 2;
+			var py = window.screenY + (window.outerHeight || 0) / 2;
+			var display = screenMod.getDisplayNearestPoint({ x: px, y: py });
+			var bw = display.bounds.width;
+			var bh = display.bounds.height;
+			var iw = window.innerWidth;
+			var ih = window.innerHeight;
+			var ow = window.outerWidth || 0;
+			var oh = window.outerHeight || 0;
+			// Window chrome is gone in native fullscreen; outer* should match the display.
+			var outerFillsDisplay = ow >= bw - 4 && oh >= bh - 4;
+			// Stale inner: still the pre-fullscreen size while outer already matches the screen.
+			var innerLooksStale = iw < bw * 0.85 && ih < bh * 0.85;
+
+			if (startFullscreen || (outerFillsDisplay && innerLooksStale)) {
+				x = bw;
+				y = bh;
+				return { x: x, y: y };
+			}
+		} catch (e) {
+			// Fall through to inner dimensions (browser or require unavailable).
+		}
+	}
 	
 	//----------------------------------------------------------------------
 	// Window size and scrolling:
