@@ -56,8 +56,11 @@ function getScreenSize()
 			var innerLooksStale = iw < bw * 0.85 && ih < bh * 0.85;
 
 			if (startFullscreen || (outerFillsDisplay && innerLooksStale)) {
-				x = bw;
-				y = bh;
+				// display.bounds can be smaller than the real fullscreen client area (Chromium vs
+				// Cocoa). Using only bounds undershoots screenX1/Y1, mis-centers the canvas, and
+				// leaves purple gutters on the right/bottom after inner dimensions stabilize.
+				x = Math.max(iw, bw);
+				y = Math.max(ih, bh);
 				return { x: x, y: y };
 			}
 		} catch (e) {

@@ -94,15 +94,20 @@ function resize()
 	canvasReSize();
 	setPosBackground();
 
-	selectIconObj.resize(screenX1, screenY1, tileScale);
-	mainMenuIconObj.resize(screenX1, screenY1, tileScale);
-	soundIconObj.resize(screenX1, screenY1, tileScale);
-	repeatActionIconObj.resize(screenX1, screenY1, tileScale);
-	infoIconObj.resize(screenX1, screenY1, tileScale);
-	helpIconObj.resize(screenX1, screenY1, tileScale);
-	themeIconObj.resize(screenX1, screenY1, tileScale);
+	if (typeof selectIconObj !== 'undefined' && selectIconObj) {
+		selectIconObj.resize(screenX1, screenY1, tileScale);
+		mainMenuIconObj.resize(screenX1, screenY1, tileScale);
+		soundIconObj.resize(screenX1, screenY1, tileScale);
+		repeatActionIconObj.resize(screenX1, screenY1, tileScale);
+		infoIconObj.resize(screenX1, screenY1, tileScale);
+		helpIconObj.resize(screenX1, screenY1, tileScale);
+		themeIconObj.resize(screenX1, screenY1, tileScale);
+	}
 
-	changeThemeScreen();
+	if (runner != null)
+		changeThemeScreen();
+	else if (typeof relayoutCoverPage === 'function')
+		relayoutCoverPage();
 }
 
 function loadStoreVariable()

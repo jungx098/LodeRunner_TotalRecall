@@ -648,3 +648,31 @@ function createFlagSpriteSheet()
 		animations: countryId
 	});
 }
+
+// resize() after fullscreen metrics change tileScale; cover art was laid out for the old scale.
+function relayoutCoverPage()
+{
+	if (typeof coverBitmap === 'undefined' || !coverBitmap || !titleBackground) return;
+
+	coverBitmap.setTransform(0, 0, tileScale, tileScale);
+	var width = coverBitmap.getBounds().width * tileScale | 0;
+	var height = coverBitmap.getBounds().height * tileScale | 0;
+	titleBackground.graphics
+		.clear().beginLinearGradientFill(
+			["#FF0000", "#FF7F00", "#FFFF00", "#00FF00", "#0000FF", "#4B0082", "#8B00FF"],
+			[0, .14, .28, .42, .56, .70, .84, .98],
+			0, height / 5, width * 6 / 5, height * 2 / 5)
+		.drawRect(0, 0, width, height);
+	if (typeof signetBitmap !== 'undefined' && signetBitmap) {
+		var sx = (BASE_SCREEN_X - SIGNET_UNDER_X - signetBitmap.getBounds().width) * tileScale;
+		var sy = (BASE_SCREEN_Y - SIGNET_UNDER_Y - signetBitmap.getBounds().height) * tileScale;
+		signetBitmap.setTransform(sx, sy, tileScale, tileScale);
+	}
+	if (typeof remakeBitmap !== 'undefined' && remakeBitmap) {
+		var rx = 372 * tileScale;
+		var ry = 130 * tileScale;
+		remakeBitmap.setTransform(rx, ry, tileScale, tileScale);
+		remakeBitmap.rotation = -5;
+	}
+	if (typeof mainStage !== 'undefined' && mainStage) mainStage.update();
+}

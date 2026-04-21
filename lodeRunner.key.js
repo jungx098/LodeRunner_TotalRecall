@@ -298,6 +298,10 @@ function gamePause()
 function handleKeyDown(event) 
 {
 	if(!event){ event = window.event; } //cross browser issues exist
+
+	// Cmd+Q / Ctrl+Q: do not handle as game input; legacy `return false` would block quit.
+	if (event.metaKey && event.keyCode === KEYCODE_Q) return true;
+	if (event.ctrlKey && event.keyCode === KEYCODE_Q) return true;
 	
 	if(event.shiftKey) {
 		if(gameState == GAME_START || gameState == GAME_RUNNING) {
