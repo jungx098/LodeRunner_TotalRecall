@@ -145,7 +145,7 @@ var soundOff = 0;
 
 function themeSoundPlay(name) 
 {
-	soundPlay(name + curTheme);
+	soundPlay(name + soundThemeName());
 }
 
 function soundDisable()

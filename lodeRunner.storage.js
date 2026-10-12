@@ -531,8 +531,10 @@ function setThemeColor()
 //===================
 function getThemeMode()
 {
-	var themeName;
-	if((themeName = getStorage(STORAGE_THEME_MODE)) == null)	{
+	//Fall back to the default for a missing or unrecognised theme name, so a
+	//stale value in storage cannot leave curTheme pointing at nothing.
+	var themeName = getStorage(STORAGE_THEME_MODE);
+	if(themeName == null || THEME_NAME_LIST.indexOf(themeName) < 0) {
 		themeName = THEME_APPLE2;
 	}
 	return themeName;

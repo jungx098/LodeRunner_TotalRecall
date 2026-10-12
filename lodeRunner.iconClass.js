@@ -1219,16 +1219,18 @@ function helpIconClass( _screenX1, _screenY1, _scale, _bitmap)
 
 }
 
-function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _themeBitmapC64)
+//_themeBitmaps is keyed by theme name, one entry per THEME_NAME_LIST entry.
+function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmaps)
 {
 	var border = 4 * _scale;
 	var themeCanvas, stage;
 	var	themeIcon, themeBG;
 	var saveStateObj;
 	var mouseOverHandler = null, mouseOutHandler = null, mouseClickHandler = null;
-	
-	var bitmapX = _themeBitmapApple2.getBounds().width * _scale;
-	var bitmapY = _themeBitmapApple2.getBounds().height * _scale;	
+
+	var sizingBitmap = _themeBitmaps[THEME_NAME_LIST[0]]; //all theme icons are the same size
+	var bitmapX = sizingBitmap.getBounds().width * _scale;
+	var bitmapY = sizingBitmap.getBounds().height * _scale;
 	var self = this;
 	var enabled = 0;
 	
@@ -1270,8 +1272,8 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 	this.resize = function (_screenX1, _screenY1, _scale)
 	{
 		border = 4 * _scale;
-		bitmapX = _themeBitmapApple2.getBounds().width * _scale;
-		bitmapY = _themeBitmapApple2.getBounds().height * _scale;
+		bitmapX = sizingBitmap.getBounds().width * _scale;
+		bitmapY = sizingBitmap.getBounds().height * _scale;
 		themeCanvas.width  = bitmapX+border*2;
 		themeCanvas.height = bitmapY+border*2;
 
@@ -1285,10 +1287,15 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 			      .drawRect(0, 0, bitmapX + border*2, bitmapY + border*2).endFill();
 
 		//change bitmap size
-		_themeBitmapApple2.setTransform(border, border, _scale, _scale);
-		_themeBitmapC64.setTransform(border, border, _scale, _scale);
+		scaleThemeBitmaps(_scale);
 
 		stage.update();
+	}
+
+	function scaleThemeBitmaps(scale)
+	{
+		for(var i = 0; i < THEME_NAME_LIST.length; i++)
+			_themeBitmaps[THEME_NAME_LIST[i]].setTransform(border, border, scale, scale);
 	}
 
 	function enableMouseHandler()
@@ -1335,9 +1342,8 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 		//themeBG.alpha = 0;
 		
 		//change bitmap size
-		_themeBitmapApple2.setTransform(border, border, _scale, _scale);
-		_themeBitmapC64.setTransform(border, border, _scale, _scale);
-		
+		scaleThemeBitmaps(_scale);
+
 		themeIcon.set({alpha:0})
 		stage.addChild(themeIcon);
 		updateThemeImage(0);
@@ -1348,14 +1354,8 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 		themeIcon.removeAllChildren();
 		themeIcon.addChild(themeBG);
 		
-		if(curTheme == THEME_APPLE2) {
-			themeIcon.addChild(_themeBitmapApple2);
-			//if(showTips) setTimeout(function() {showTipsText("APPLE-II THEME MODE", 2500);}, 50);
-		} else {
-			themeIcon.addChild(_themeBitmapC64);
-			//if(showTips) setTimeout(function() {showTipsText("C64 THEME MODE", 2500);}, 50);
-		}
-		
+		themeIcon.addChild(_themeBitmaps[curTheme]);
+
 		stage.update();
 	}
 	
@@ -1375,8 +1375,10 @@ function themeIconClass( _screenX1, _screenY1, _scale, _themeBitmapApple2, _them
 	function mouseClick()
 	{
 		if(gameState == GAME_PAUSE || (gameState == GAME_WAITING && playMode != PLAY_EDIT)) return;
-		curTheme = (curTheme == THEME_APPLE2?THEME_C64:THEME_APPLE2);
-		
+		//cycle through the themes in THEME_NAME_LIST order
+		var next = THEME_NAME_LIST.indexOf(curTheme) + 1;
+		curTheme = THEME_NAME_LIST[next % THEME_NAME_LIST.length];
+
 		saveState();
 
 		soundStop(soundDig); 

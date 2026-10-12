@@ -26,7 +26,7 @@ var soundOnIconBitmap, soundOffIconBitmap, soundIconObj;
 var helpIconBitmap, helpIconObj;
 var infoObj, infoIconBitmap, infoIconObj;
 var repeatActionOnIconBitmap, repeatActionOffIconBitmap, repeatActionIconObj;
-var apple2IconBitmap, C64IconBitmap, themeIconObj, themeColorObj;
+var themeIconBitmaps, themeIconObj, themeColorObj;
 var checkBitmap;
 var returnBitmap, select1Bitmap, nextBitmap;
 var openFolderBitmap; // for restore custom levels
@@ -140,7 +140,61 @@ var soundFall, soundDig, soundPass, soundEnding;
 var themeImagePath = "image/Theme/";
 var themeSoundPath = "sound/Theme/";
 
-function preloadResource() 
+//Resource id -> file name within a theme folder. Three ids do not match their
+//file name: "solid" is block.png and "trapBrick" is trap.png.
+var themeImageFile = {
+	empty: "empty", brick: "brick", solid: "block", ladder: "ladder",
+	rope: "rope", trapBrick: "trap", hladder: "hladder", gold: "gold",
+	guard1: "guard1", runner1: "runner1",
+	runner: "runner", guard: "guard", redhat: "redhat", hole: "hole",
+	ground: "ground", over: "over", text: "text"
+};
+
+var themeSoundFile = {
+	reborn: "born", dead: "dead", dig: "dig", getGold: "getGold",
+	fall: "fall", down: "down", pass: "pass", trap: "trap"
+};
+
+//A theme listed here ships artwork only and borrows another theme's sounds,
+//rather than duplicating the audio files on disk.
+var themeSoundSource = {};
+themeSoundSource[THEME_APPLE2_ORG] = THEME_APPLE2;
+
+function soundThemeName()
+{
+	return themeSoundSource[curTheme] || curTheme;
+}
+
+//Builds the per-theme half of the preload manifest, once per THEME_NAME_LIST
+//entry, so adding a theme needs no change here.
+function themeResource()
+{
+	var list = [], i, id, theme;
+
+	for(i = 0; i < THEME_NAME_LIST.length; i++) {
+		theme = THEME_NAME_LIST[i];
+
+		for(id in themeImageFile) {
+			list.push({
+				src: themeImagePath + theme + "/" + themeImageFile[id] + ".png" + noCache,
+				id: id + theme
+			});
+		}
+
+		if(themeSoundSource[theme]) continue; //borrows another theme's sounds
+
+		for(id in themeSoundFile) {
+			list.push({
+				src: themeSoundPath + theme + "/" + themeSoundFile[id] + ".ogg" + noCache,
+				id: id + theme
+			});
+		}
+	}
+
+	return list;
+}
+
+function preloadResource()
 {
 	var runnerSprite = new createjs.Sprite(runnerData, "runRight");
 	var progress = new createjs.Shape(); 
@@ -151,45 +205,8 @@ function preloadResource()
 		{ src: "image/remake.png"+noCache,  id: "remake" },
 		{ src: "image/signet.png"+noCache,  id: "signet" },
 
-		{ src: themeImagePath + THEME_APPLE2 + "/empty.png"+noCache,   id: "empty" + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/brick.png"+noCache,   id: "brick" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/block.png"+noCache,   id: "solid" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/ladder.png"+noCache,  id: "ladder" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/rope.png"+noCache,    id: "rope" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/trap.png"+noCache,    id: "trapBrick" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/hladder.png"+noCache, id: "hladder" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/gold.png"+noCache,    id: "gold" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/guard1.png"+noCache,  id: "guard1" + THEME_APPLE2  },
-		{ src: themeImagePath + THEME_APPLE2 + "/runner1.png"+noCache, id: "runner1" + THEME_APPLE2  },
+		//Per-theme images and sounds are appended below, once per THEME_NAME_LIST entry.
 
-		{ src: themeImagePath + THEME_APPLE2 + "/runner.png"+noCache,  id: "runner"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/guard.png"+noCache,   id: "guard"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/redhat.png"+noCache,  id: "redhat"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/hole.png"+noCache,    id: "hole"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/ground.png"+noCache,  id: "ground"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/over.png"+noCache,    id: "over"  + THEME_APPLE2 },
-		{ src: themeImagePath + THEME_APPLE2 + "/text.png"+noCache,    id: "text"  + THEME_APPLE2 },
-
-		
-		{ src: themeImagePath + THEME_C64 + "/empty.png"+noCache,   id: "empty" + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/brick.png"+noCache,   id: "brick" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/block.png"+noCache,   id: "solid" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/ladder.png"+noCache,  id: "ladder" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/rope.png"+noCache,    id: "rope" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/trap.png"+noCache,    id: "trapBrick" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/hladder.png"+noCache, id: "hladder" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/gold.png"+noCache,    id: "gold" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/guard1.png"+noCache,  id: "guard1" + THEME_C64  },
-		{ src: themeImagePath + THEME_C64 + "/runner1.png"+noCache, id: "runner1" + THEME_C64  },
-
-		{ src: themeImagePath + THEME_C64 + "/runner.png"+noCache,  id: "runner"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/guard.png"+noCache,   id: "guard"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/redhat.png"+noCache,  id: "redhat"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/hole.png"+noCache,    id: "hole"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/ground.png"+noCache,  id: "ground"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/over.png"+noCache,    id: "over"  + THEME_C64 },
-		{ src: themeImagePath + THEME_C64 + "/text.png"+noCache,    id: "text"  + THEME_C64 },
-		
 		{ src: "image/eraser.png"+noCache,  id: "eraser" },
 	
 		{ src: "image/help.png"+noCache,    id: "help" },
@@ -223,30 +240,12 @@ function preloadResource()
 		{ src: "image/repeatOn.png"+noCache,  id: "repeatOn" },
 		{ src: "image/repeatOff.png"+noCache, id: "repeatOff" },
 		
-		{ src: "image/apple2.png"+noCache,     id: "apple2" },
-		{ src: "image/commodore64.png"+noCache,id: "C64" },
-		
+		{ src: "image/apple2.png"+noCache,     id: "themeIcon" + THEME_APPLE2 },
+		{ src: "image/apple2org.png"+noCache,  id: "themeIcon" + THEME_APPLE2_ORG },
+		{ src: "image/commodore64.png"+noCache,id: "themeIcon" + THEME_C64 },
+
 		{ src: "image/flags32.png"+noCache,     id: "flag" },
 	
-		{ src: themeSoundPath + THEME_APPLE2 + "/born.ogg"+noCache,    id:"reborn" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/dead.ogg"+noCache,    id:"dead" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/dig.ogg"+noCache,     id:"dig" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/getGold.ogg"+noCache, id:"getGold" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/fall.ogg"+noCache,    id:"fall" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/down.ogg"+noCache,    id:"down" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/pass.ogg"+noCache,    id:"pass" + THEME_APPLE2},
-		{ src: themeSoundPath + THEME_APPLE2 + "/trap.ogg"+noCache,    id:"trap" + THEME_APPLE2},
-
-		
-		{ src: themeSoundPath + THEME_C64 + "/born.ogg"+noCache,    id:"reborn" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/dead.ogg"+noCache,    id:"dead" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/dig.ogg"+noCache,     id:"dig" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/getGold.ogg"+noCache, id:"getGold" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/fall.ogg"+noCache,    id:"fall" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/down.ogg"+noCache,    id:"down" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/pass.ogg"+noCache,    id:"pass" + THEME_C64},
-		{ src: themeSoundPath + THEME_C64 + "/trap.ogg"+noCache,    id:"trap" + THEME_C64},
-
 		{ src: themeSoundPath + THEME_C64 + "/goldFinish1.ogg"+noCache,    id:"goldFinish1"},
 		{ src: themeSoundPath + THEME_C64 + "/goldFinish2.ogg"+noCache,    id:"goldFinish2"},
 		{ src: themeSoundPath + THEME_C64 + "/goldFinish3.ogg"+noCache,    id:"goldFinish3"},
@@ -264,9 +263,11 @@ function preloadResource()
 		
 		{ src: "cursor/openhand.cur"+noCache, id:"openHand"}, //preload cursor
 		{ src: "cursor/closedhand.cur"+noCache, id:"closeHand"}
-		
-	];	
-	
+
+	];
+
+	resource = resource.concat(themeResource());
+
 	preload = new createjs.LoadQueue(true);
 	createjs.Sound.alternateExtensions = ["mp3"];
 	preload.installPlugin(createjs.Sound);
@@ -411,9 +412,11 @@ function preloadResource()
 		repeatActionOffIconBitmap = new createjs.Bitmap(preload.getResult("repeatOff"));
 		repeatActionIconObj = new repeatActionIconClass(screenX1, screenY1, tileScale, repeatActionOnIconBitmap, repeatActionOffIconBitmap);
 		
-		apple2IconBitmap = new createjs.Bitmap(preload.getResult("apple2")); //04/18/2015
-		C64IconBitmap = new createjs.Bitmap(preload.getResult("C64"));
-		themeIconObj = new themeIconClass(screenX1, screenY1, tileScale, apple2IconBitmap, C64IconBitmap);
+		themeIconBitmaps = {}; //04/18/2015
+		for(var t = 0; t < THEME_NAME_LIST.length; t++)
+			themeIconBitmaps[THEME_NAME_LIST[t]] = new createjs.Bitmap(preload.getResult("themeIcon" + THEME_NAME_LIST[t]));
+
+		themeIconObj = new themeIconClass(screenX1, screenY1, tileScale, themeIconBitmaps);
 
 		themeColorObj = new colorSelectorClass(screenX1, screenY1, tileWScale);
 		checkBitmap = new  createjs.Bitmap(preload.getResult("check"));
@@ -443,9 +446,9 @@ function preloadResource()
 
 function createSoundInstance()
 {
-	soundFall = createjs.Sound.createInstance("fall" + curTheme); 
-	soundDig = createjs.Sound.createInstance("dig" + curTheme);
-	soundPass = createjs.Sound.createInstance("pass" + curTheme);
+	soundFall = createjs.Sound.createInstance("fall" + soundThemeName());
+	soundDig = createjs.Sound.createInstance("dig" + soundThemeName());
+	soundPass = createjs.Sound.createInstance("pass" + soundThemeName());
 	
 	soundEnding = createjs.Sound.createInstance("ending"); //for training mode only 
 	

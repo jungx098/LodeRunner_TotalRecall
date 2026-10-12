@@ -9,15 +9,23 @@
 // [s]: checksum ([v]..[pading])
 // [v]: version = 1 [0]
 // [m]: share mode (1:Fackbook, 2:twitter, 3:weibo, 4:link) [1] 
-// [t]: theme mode (1:apple2, 2:c64) [2]
+// [t]: theme mode (1:apple2, 2:c64, 3:apple2 original) [2]
 // [r]: reserved 3 bytes [3..5]
 // [creator]: creator name [6-]
 // [pading]: pading "@" let length([v]+[m]+[t]+[creator]+[pading]) multiplier of 3
 //=================================================================================
 
-var SHARE_DATA_VERSION = 1; 
+var SHARE_DATA_VERSION = 1;
 var shareLevelData = [""];
-var shareInfo = null; // { ver:1, mode:1-4 [m], theme:1-2 [t], creator: }
+var shareInfo = null; // { ver:1, mode:1-4 [m], theme:1-3 [t], creator: }
+
+//Fixed ids, not THEME_NAME_LIST positions: a new theme must not renumber the
+//themes already baked into shared links.
+var shareThemeId = {};
+shareThemeId[THEME_APPLE2] = 1;
+shareThemeId[THEME_C64] = 2;
+shareThemeId[THEME_APPLE2_ORG] = 3;
+var SHARE_THEME_MAX = 3;
 var shareFirstTime = 1;
 
 function getQueryStringParameterValue(queryString, parameterName)
@@ -66,7 +74,7 @@ function getShareVerInfo(encUrlVerData)
 		if (creator.length != creatorLength) 
 			creator = creator.substr(0, creatorLength);
 		
-		if(shareMode > 0 && shareMode <= 4 && theme > 0 && theme <=2 && creatorLength > 0 && vaildPlayerName(creator)) {
+		if(shareMode > 0 && shareMode <= 4 && theme > 0 && theme <= SHARE_THEME_MAX && creatorLength > 0 && vaildPlayerName(creator)) {
 			verInfo = {};
 			verInfo.ver = 1;
 			verInfo.mode = shareMode;
@@ -126,7 +134,7 @@ function getShareUrlInfo()
 
 function converLevel2ShareUrl(level, shareMode, creator)
 {
-	var theme =(curTheme == THEME_APPLE2)?1:2;
+	var theme = shareThemeId[curTheme] || 1;
 	var padingTimes = (3-creator.length%3) % 3;
 	var zipLevel = zipLevelMap(level);
 	var verInfo = `1${shareMode}${theme}   ${creator}${'@'.repeat(padingTimes)}`;

@@ -154,8 +154,13 @@ var PLAY_DATA_USERDEF = 999;
 //================================================
 // Define themes string also as theme folder name 
 //================================================
-var THEME_APPLE2 = "APPLE2"; 
+var THEME_APPLE2 = "APPLE2";
 var THEME_C64    = "C64";
+var THEME_APPLE2_ORG = "APPLE2_ORG"; //original APPLE-II artwork, extracted from the 1983 disk
+
+//Theme order for preloading, for the theme icon, and for share links.
+//Appending a theme here is enough; nothing else hard-codes the list.
+var THEME_NAME_LIST = [THEME_APPLE2, THEME_APPLE2_ORG, THEME_C64];
 
 //================================
 // Below defined for LocalStorage

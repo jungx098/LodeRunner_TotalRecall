@@ -23,11 +23,21 @@ themeColor[THEME_C64] = [
 	"#2E8B57"
 ];
 
+//The original APPLE-II artwork is monochrome, so color id 0 is the authentic
+//white and the rest are phosphor-ish alternatives.
+themeColor[THEME_APPLE2_ORG] = [
+	null,      //original image color (white)
+	"#3DF73D", //green phosphor
+	"#FFB000", //amber phosphor
+	"#45C2F0",
+	"#F070B0"
+];
+
 var maxThemeColor = themeColor[THEME_APPLE2].length;
 var themeBaseBitmap = {};
 var curColorId = {};
 var orgImageColor = {};
-var themeNameList = [THEME_APPLE2, THEME_C64];
+var themeNameList = THEME_NAME_LIST;
 
 function createBaseBitmapInstance()
 {
