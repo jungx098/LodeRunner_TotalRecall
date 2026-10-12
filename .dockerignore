@@ -1,0 +1,13 @@
+.git
+.gitignore
+node_modules
+
+# Source disk images and the Windows extractor binaries: ~5 MB of material the
+# browser never requests.
+tools/apple2.dsk
+tools/c64.dsk
+tools/*.exe
+
+Dockerfile
+.dockerignore
+docker-compose.yml
