@@ -175,6 +175,8 @@ function themeResource()
 		theme = THEME_NAME_LIST[i];
 
 		for(id in themeImageFile) {
+			//The 1983 disk has no red-hat guard. That sheet is the normal guard.
+			if(theme == THEME_APPLE2_ORG && id == "redhat") continue;
 			list.push({
 				src: themeImagePath + theme + "/" + themeImageFile[id] + ".png" + noCache,
 				id: id + theme
