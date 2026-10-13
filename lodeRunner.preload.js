@@ -155,13 +155,24 @@ var themeSoundFile = {
 	fall: "fall", down: "down", pass: "pass", trap: "trap"
 };
 
-//A theme listed here ships artwork only and borrows another theme's sounds,
-//rather than duplicating the audio files on disk.
+//A theme listed here borrows another theme's sounds for any effect it does
+//not ship itself.
 var themeSoundSource = {};
 themeSoundSource[THEME_APPLE2_ORG] = THEME_APPLE2;
 
-function soundThemeName()
+//Every APPLE2_ORG effect is the 1983 speaker routine. The four fixed tunes
+//are the disk's sound strings. Dig, fall, landing, and the level-clear
+//fanfare are rendered from the code that generates them during play.
+var themeSpeakerSound = {};
+themeSpeakerSound[THEME_APPLE2_ORG] = {
+	getGold:1, dead:1, reborn:1, trap:1,
+	dig:1, fall:1, down:1, pass:1
+};
+
+function soundThemeName(eventName)
 {
+	var own = themeSpeakerSound[curTheme];
+	if(eventName && own && own[eventName]) return curTheme;
 	return themeSoundSource[curTheme] || curTheme;
 }
 
@@ -183,7 +194,17 @@ function themeResource()
 			});
 		}
 
-		if(themeSoundSource[theme]) continue; //borrows another theme's sounds
+		var speaker = themeSpeakerSound[theme];
+		if(speaker) {
+			for(id in speaker) {
+				list.push({
+					src: themeSoundPath + theme + "/" + themeSoundFile[id] + ".mp3" + noCache,
+					id: id + theme
+				});
+			}
+		}
+
+		if(themeSoundSource[theme]) continue; //borrows the rest of another theme's sounds
 
 		for(id in themeSoundFile) {
 			list.push({
@@ -448,9 +469,9 @@ function preloadResource()
 
 function createSoundInstance()
 {
-	soundFall = createjs.Sound.createInstance("fall" + soundThemeName());
-	soundDig = createjs.Sound.createInstance("dig" + soundThemeName());
-	soundPass = createjs.Sound.createInstance("pass" + soundThemeName());
+	soundFall = createjs.Sound.createInstance("fall" + soundThemeName("fall"));
+	soundDig = createjs.Sound.createInstance("dig" + soundThemeName("dig"));
+	soundPass = createjs.Sound.createInstance("pass" + soundThemeName("pass"));
 	
 	soundEnding = createjs.Sound.createInstance("ending"); //for training mode only 
 	
