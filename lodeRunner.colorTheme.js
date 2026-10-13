@@ -58,9 +58,12 @@ function createThemeBaseBitmap(themeName, newColor, id)
 
 	for(var i=0; i < baseBitmapName.length; i++){
 		var imageName = baseBitmapName[i]+themeName;
+		var sourceName = imageName;
+		if(themeName == THEME_APPLE2_ORG && baseBitmapName[i] == "redhat")
+			sourceName = "guard" + themeName;
 		if( (imageName+id) in themeBaseBitmap) 
 			return;
-		themeBaseBitmap[imageName+id] = createBitmap(imageName, oldColor, newColor);
+		themeBaseBitmap[imageName+id] = createBitmap(sourceName, oldColor, newColor);
 	}
 }
 
