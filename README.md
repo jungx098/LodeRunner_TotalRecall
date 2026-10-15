@@ -58,7 +58,7 @@ This program build with Javascript + [CreateJS](http://www.createjs.com).
 </tr>
 </table>
 
-### * Provide 2 Themes
+### * Provide 3 Themes
 <table>
 <tr>
 <td valign="middle">1.</td>
@@ -67,6 +67,11 @@ This program build with Javascript + [CreateJS](http://www.createjs.com).
 </tr>
 <tr>
 <td valign="middle">2.</td>
+<td valign="middle"><img src="image/apple2org.png" height="23" width="20"></td>
+<td><b>APPLE-II Original</b></td>
+</tr>
+<tr>
+<td valign="middle">3.</td>
 <td valign="middle"><img src="image/commodore64.png" height="23" width="20"></td>
 <td valign="middle"><b>Commodore 64</b></td>
 </tr>
